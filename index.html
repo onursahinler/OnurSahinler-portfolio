@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onur Şahinler - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="header-title">ONUR ŞAHİNLER</h1>
+                <p class="header-description">
+                    Computer Engineering graduate from Izmir Institute of Technology (Honors Student), certified in ISTQB Foundation Level with a focus on software testing. 
+                    Actively participated in team projects during studies, enhancing communication and collaboration skills. 
+                    Highly motivated to learn and apply theoretical knowledge in practice, passionate about ensuring software quality. 
+                    Solution-oriented mindset, eager to contribute to innovative testing projects and team success.
+
+                    
+                </p>
+                <p class="header-description">Feel free to reach out - projects, advice, experience sharing... I'm open to chatting about anything!</p>
+                <div class="header-stats">
+                    <div class="stat">
+                        <span class="stat-number">ISTQB</span>
+                        <span class="stat-label">CERTIFIED</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">23</span>
+                        <span class="stat-label">COUNTRIES VISITED</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">AVAILABLE</span>
+                    </div>
+                </div>
+                <button class="cta-button">
+                    <i class="fas fa-download"></i>
+                    Download CV
+                </button>
+            </div>
+            
+            <!-- Surprise Button -->
+            <button class="surprise-button" id="surpriseBtn">
+                <i class="fas fa-gift"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" id="mobileNavToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Left Sidebar - Navigation -->
+            <aside class="sidebar" id="sidebar">
+                <h2 class="sidebar-title">Portfolio Sections</h2>
+                <nav class="nav-menu">
+                    <div class="nav-item active">
+                        <span class="nav-number">1</span>
+                        <div class="nav-content">
+                            <h3>About</h3>
+                            <p>Personal information and summary</p>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">2</span>
+                        <div class="nav-content">
+                            <h3>Experience</h3>
+                            <p>My work experience</p>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">3</span>
+                        <div class="nav-content">
+                            <h3>Projects</h3>
+                            <p>Projects I've developed</p>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">4</span>
+                        <div class="nav-content">
+                            <h3>Education</h3>
+                            <p>My academic background</p>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">5</span>
+                        <div class="nav-content">
+                            <h3>Skills</h3>
+                            <p>My technical skills</p>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">6</span>
+                        <div class="nav-content">
+                            <h3>Certificates & Awards</h3>
+                            <p>My achievements and certifications</p>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">7</span>
+                        <div class="nav-content">
+                            <h3>Hobbies</h3>
+                            <p>My personal interests</p>
+                        </div>
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-number">8</span>
+                        <div class="nav-content">
+                            <h3>Contact</h3>
+                            <p>Contact information</p>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Right Content - Main Form -->
+            <section class="main-section">
+                <h2 class="section-title">ABOUT</h2>
+                
+                <div class="form-container">
+                    <!-- Personal Information -->
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" placeholder="Onur Şahinler" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Profession *</label>
+                        <div class="form-row">
+                            <input type="text" class="form-input" placeholder="Full-Stack Developer" readonly>
+                            <button class="generate-btn">
+                                <i class="fas fa-sync"></i>
+                                Update
+                            </button>
+                        </div>
+                        <small class="form-hint">Update your professional information</small>
+                    </div>
+
+                    <!-- Professional Details -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Experience (Years) *</label>
+                            <input type="number" class="form-input" placeholder="5" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Specialization *</label>
+                            <div class="button-group">
+                                <button class="option-btn active">Web Dev</button>
+                                <button class="option-btn">Data Science</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Location *</label>
+                            <input type="text" class="form-input" placeholder="Istanbul, Turkey" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Language *</label>
+                            <div class="button-group">
+                                <button class="option-btn active">Turkish</button>
+                                <button class="option-btn">English</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Education *</label>
+                            <input type="text" class="form-input" placeholder="Computer Engineering" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Certifications *</label>
+                            <div class="button-group">
+                                <button class="option-btn active">AWS</button>
+                                <button class="option-btn">Google Cloud</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bio Section -->
+                    <div class="form-group">
+                        <label class="form-label">About Me *</label>
+                        <textarea class="form-textarea" placeholder="I am a developer with 5+ years of experience in software development and data science, creating innovative solutions with modern technologies. I develop high-performance and scalable applications by prioritizing user experience." readonly></textarea>
+                    </div>
+                </div>
+
+                <button class="next-btn">
+                    <span>Next Section</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">© 2025 Onur Şahinler. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <!-- Surprise Modal -->
+    <div class="surprise-modal" id="surpriseModal">
+        <div class="surprise-modal-content">
+            <button class="surprise-modal-close" id="closeSurpriseModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>😅 A Little Secret About This Website</h2>
+            <p>I know this website isn't very professional or visually appealing 😅 Actually, this is an intentional choice. The field I want to build my career in - software testing - is exactly about finding bugs on sites like this, reporting them, and helping make them better.</p>
+            <p>I've already listed the bugs, design flaws, and user experience issues on this site myself. Completely fixing them is the developers' job 😅. Good projects emerge through everyone's efforts. This site is actually just a small project I worked on in my free time. If you had even the slightest smile on your face while browsing my site, that makes me happy :)</p>
+            <p>By creating an imperfect site, I'm preparing myself for the situations I'll encounter in the real world. After all, people who can find their own mistakes have less trouble finding mistakes made by others 😄.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
