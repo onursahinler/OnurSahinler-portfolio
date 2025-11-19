@@ -1,5 +1,26 @@
 // Portfolio Navigation and Interactions
+// Prevent browser from restoring scroll position
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+// Scroll to top on page load/refresh
+window.addEventListener('load', function() {
+    window.scrollTo(0, 0);
+    // Force scroll after a small delay to ensure everything is rendered
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, 0);
+});
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Scroll to top immediately
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
     // Initialize scroll animations
     initScrollAnimations();
     
@@ -18,14 +39,28 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentSection = 0;
     const sections = ['about', 'experience', 'projects', 'education', 'skills', 'certificates', 'hobbies', 'contact'];
     
-    // Initialize
-    updateActiveSection(0);
+    // Initialize (without scrolling)
+    updateActiveSection(0, false);
     
     // Navigation click handlers
     navItems.forEach((item, index) => {
         item.addEventListener('click', () => {
             currentSection = index;
-            updateActiveSection(index);
+            // Check if mobile menu is open
+            const isMobile = window.innerWidth <= 768;
+            const menuOpen = sidebar && sidebar.classList.contains('mobile-open');
+            
+            if (isMobile && menuOpen) {
+                // Close mobile menu first
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('mobile-open');
+                document.body.style.overflow = '';
+                // Scroll with delay for menu close animation
+                updateActiveSection(index, true, 350);
+            } else {
+                // Normal scroll
+                updateActiveSection(index, true);
+            }
         });
     });
     
@@ -33,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     nextBtn.addEventListener('click', () => {
         if (currentSection < sections.length - 1) {
             currentSection++;
-            updateActiveSection(currentSection);
+            updateActiveSection(currentSection, true);
         } else if (currentSection === sections.length - 1) {
             // If on contact page, scroll to surprise button and show popup
             scrollToSurpriseButton();
@@ -103,27 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = '';
         });
         
-        // Close mobile menu when clicking on nav items and scroll to section
-        navItems.forEach((item, index) => {
-            item.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.remove('mobile-open');
-                    sidebarOverlay.classList.remove('mobile-open');
-                    document.body.style.overflow = '';
-                    
-                    // Scroll to the main section after a short delay
-                    setTimeout(() => {
-                        const mainSection = document.querySelector('.main-section');
-                        if (mainSection) {
-                            mainSection.scrollIntoView({ 
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }
-                    }, 300); // Wait for menu close animation
-                }
-            });
-        });
         
         // Close mobile menu on window resize
         window.addEventListener('resize', () => {
@@ -136,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Update active section
-    function updateActiveSection(index) {
+    function updateActiveSection(index, shouldScroll = true, scrollDelay = 100) {
         // Update navigation
         navItems.forEach((item, i) => {
             item.classList.toggle('active', i === index);
@@ -150,6 +164,42 @@ document.addEventListener('DOMContentLoaded', function() {
             nextBtn.innerHTML = '<span>Complete</span><i class="fas fa-check"></i>';
         } else {
             nextBtn.innerHTML = '<span>Next Section</span><i class="fas fa-arrow-right"></i>';
+        }
+        
+        // Scroll to top of main section after content update (only if shouldScroll is true)
+        if (shouldScroll) {
+            setTimeout(() => {
+                const mainSection = document.querySelector('.main-section');
+                if (mainSection) {
+                    // Get the absolute position of main-section
+                    const mainSectionRect = mainSection.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const targetY = mainSectionRect.top + scrollTop - 20; // 20px padding from top
+                    
+                    // Smooth scroll
+                    const startY = window.pageYOffset;
+                    const distance = targetY - startY;
+                    const duration = 600;
+                    let start = null;
+                    
+                    function step(timestamp) {
+                        if (!start) start = timestamp;
+                        const progress = timestamp - start;
+                        const ease = progress / duration;
+                        const easeInOutCubic = ease < 0.5 
+                            ? 4 * ease * ease * ease 
+                            : 1 - Math.pow(-2 * ease + 2, 3) / 2;
+                        
+                        window.scrollTo(0, startY + distance * easeInOutCubic);
+                        
+                        if (progress < duration) {
+                            requestAnimationFrame(step);
+                        }
+                    }
+                    
+                    requestAnimationFrame(step);
+                }
+            }, scrollDelay); // Delay to ensure content is rendered (longer for mobile menu close)
         }
     }
     
@@ -250,7 +300,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function getAboutContent() {
         return `
             <div class="form-group">
-                <label class="form-label">About Me</label>
                 <div class="about-content">
                     <div class="about-intro">
                         <h3>Hello! I'm Onur Şahinler</h3>
@@ -286,7 +335,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return `
             <div class="form-group">
-                <label class="form-label">Professional Experience</label>
                 <div class="experience-content">
                     
                     <!-- Experience 1: Current Job -->
@@ -309,6 +357,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <li>Built a responsive Next.js + TypeScript + Tailwind CSS web app with a clinician-friendly interface</li>
                                     <li>Developed an AI-powered cardiovascular risk assessment tool for CML patients </li>
                                     <li>Designed a secure doctor authentication system and intuitive multi-step patient workflow</li>
+                                    <li>Integrated Explainable AI with clinical guidelines through LLMs</li>
+                                    <li>Created a multi-agent system for early cardiovascular risk detection</li>
                                     <li>Performed software testing to ensure reliability, performance, and cross-platform compatibility</li>
                                 </ul>
                                 <p><strong>Project Goal:</strong> Bridges AI and healthcare, empowering clinicians with a transparent and reliable tool for early cardiovascular risk detection.</p>
@@ -405,7 +455,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function getProjectsContent() {
         return `
             <div class="form-group">
-                <label class="form-label">My Projects</label>
                 <div class="projects-content">
                     
                     <!-- Project 1: Clinical Decision Support Tool -->
@@ -415,11 +464,18 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="project-duration">September 2025 - Present</span>
                         </div>
                         <div class="project-description">
-                            <p>Working as a Full Stack Developer under the guidance of Asst. Prof. Chang Sun to predict cardiovascular disease risks in leukemia patients. This project focuses on optimizing the clinical decision support tool by building a clinician-friendly user interface and exploring large language models to integrate clinical guidelines, enhancing the explainability and transparency of the tool.</p>
-                            <p>The project bridges AI and healthcare, empowering clinicians with a transparent and reliable tool for early cardiovascular risk detection. The system uses Logistic Regression with SHAP explanations to provide clinicians with both predictions and interpretable insights for better patient care decisions.</p>
+                            <p>I am working as a Full Stack Developer under the guidance of Asst. Prof. Chang Sun to predict cardiovascular disease risks in leukemia patients. In this project, I am building an advanced clinical decision support system that combines machine learning predictions with large language model–powered explanations and interventions, creating a transparent and actionable tool for clinicians.</p>
+                            <p>My work bridges AI and healthcare by empowering clinicians with a comprehensive multi-agent system for early cardiovascular risk detection. The system uses a Random Forest model with SHAP (SHapley Additive exPlanations) for interpretable predictions, enhanced by a sophisticated multi-agent architecture that includes:</p>
+                            <ul>
+                                <li>a Prediction Agent for risk scoring,</li>
+                                <li>an Explanation Agent that converts SHAP values into natural language explanations using LLMs,</li>
+                                <li>an Intervention Agent that provides evidence-based treatment recommendations, and</li>
+                                <li>a Knowledge Agent that answers clinical questions about features, CML, and CVD.</li>
+                            </ul>
+                            <p>The platform also includes a modern Next.js web interface with interactive SHAP visualizations, real-time what-if scenario analysis, and an AI-powered chatbot that intelligently routes queries to specialized agents. By integrating explainable AI with clinical guidelines through LLMs, I aim to significantly enhance the system's explainability, transparency, and practical utility for supporting patient care decisions.</p>
                         </div>
                         <div class="project-technologies">
-                            <i class="fas fa-gem"></i> Next.js, TypeScript, Tailwind CSS, Machine Learning, Logistic Regression, SHAP, AI Integration, Healthcare Data Processing, Authentication Systems
+                            <i class="fas fa-gem"></i> Next.js, TypeScript, Tailwind CSS, Machine Learning, Random Forest, SHAP, Large Language Models (LLMs), Multi-Agent Systems, AI Integration
                         </div>
                         <div class="project-skills">
                             <i class="fas fa-code"></i> Full Stack Development, AI/ML Integration, Healthcare Technology, Software Testing, Clinical Decision Support Systems
@@ -434,8 +490,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="project-duration">October 2024 - June 2025</span>
                         </div>
                         <div class="project-description">
-                            <p>Developed "Charge Mate," a mobile web application designed to help electric vehicle (EV) users locate and reserve charging stations in real time. The app dynamically recommends optimal stations and routes by considering user preferences, traffic conditions, weather, and energy costs.</p>
-                            <p>Key features include manual and AI-assisted reservation options, route suggestions based on live traffic and departure time, personalized filtering and smart recommendations, secure authentication with Firebase, and a QR code-based check-in system. The project demonstrates a practical and scalable solution for EV infrastructure and sustainable transportation.</p>
+                            <p>I developed “Charge Mate,” a mobile web application designed to help electric vehicle (EV) users locate and reserve charging stations in real time. The app dynamically recommends optimal stations and routes by considering user preferences, traffic conditions, weather, and energy costs.</p>
+                            <p>Key features include both manual and AI-assisted reservation options, route suggestions based on live traffic and departure time, personalized filtering and smart recommendations, secure authentication with Firebase, and a QR code–based check-in system. This project demonstrates my ability to build a practical and scalable solution for EV infrastructure and sustainable transportation.</p>
                         </div>
                         <div class="project-technologies">
                             <i class="fas fa-gem"></i> Flutter, Firebase, Real-time Data Processing, QR Code Integration, AI Integration
@@ -509,7 +565,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function getSkillsContent() {
         return `
             <div class="form-group">
-                <label class="form-label">Technical Skills</label>
                 <div class="skills-categories">
                     
                     <!-- Testing & Quality Assurance -->
@@ -606,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="education-content">
                 <div class="education-item">
                     <h3>İzmir Institute of Technology (IZTECH)</h3>
-                    <div class="education-duration">2020 - 2024</div>
+                    <div class="education-duration">2020 - 2025</div>
                     <div class="education-degree">Bachelor’s degree in Computer Engineering</div>
                     <div class="education-details">
                         <p><strong>Honors Student</strong> - Graduated with distinction</p>
@@ -700,7 +755,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <div class="hobby-item">
                     <h3>Traveling</h3>
-                    <p>Traveling abroad to see different cultures and meet different people is truly enjoyable. Despite my young age, I've visited 23 countries outside of Turkey, and I want to see as many places as possible in my lifetime.</p>
+                    <p>Traveling abroad to see different cultures and meet different people is truly enjoyable. Despite my young age, I've visited 18 countries outside of Turkey, and I want to see as many places as possible in my lifetime.</p>
                 </div>
                 
                 <div class="hobby-item">
@@ -816,21 +871,48 @@ document.addEventListener('DOMContentLoaded', function() {
     function scrollToSurpriseButton() {
         const surpriseBtn = document.getElementById('surpriseBtn');
         if (surpriseBtn) {
-            // Scroll to surprise button
-            surpriseBtn.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
+            // Get button position
+            const buttonRect = surpriseBtn.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const targetY = buttonRect.top + scrollTop - (window.innerHeight / 2) + (buttonRect.height / 2);
             
-            // Show popup after a short delay
-            setTimeout(() => {
-                showSurprisePopup();
-            }, 1000);
+            // Smooth scroll without layout shift
+            const startY = window.pageYOffset;
+            const distance = targetY - startY;
+            const duration = 800;
+            let start = null;
+            
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = timestamp - start;
+                const ease = progress / duration;
+                const easeInOutCubic = ease < 0.5 
+                    ? 4 * ease * ease * ease 
+                    : 1 - Math.pow(-2 * ease + 2, 3) / 2;
+                
+                window.scrollTo(0, startY + distance * easeInOutCubic);
+                
+                if (progress < duration) {
+                    requestAnimationFrame(step);
+                } else {
+                    // Show popup after scroll completes
+                    setTimeout(() => {
+                        showSurprisePopup();
+                    }, 300);
+                }
+            }
+            
+            requestAnimationFrame(step);
         }
     }
     
     // Show surprise popup
     function showSurprisePopup() {
+        // Prevent body scroll but maintain scrollbar to avoid layout shift
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.paddingRight = scrollbarWidth + 'px';
+        document.body.style.overflow = 'hidden';
+        
         const popup = document.createElement('div');
         popup.className = 'surprise-popup';
         popup.innerHTML = `
@@ -841,7 +923,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h3>🎉 Congratulations! You've completed the portfolio!</h3>
                 <p>But wait, there's a surprise here! Don't leave this page without clicking the gift button above! 😊</p>
                 <p><strong>This surprise is the most special part of my portfolio!</strong></p>
-                <button class="surprise-popup-btn" onclick="this.parentElement.parentElement.remove()">
+                <button class="surprise-popup-btn">
                     <i class="fas fa-check"></i>
                     Got it, I'll check the surprise!
                 </button>
@@ -861,7 +943,18 @@ document.addEventListener('DOMContentLoaded', function() {
             justify-content: center;
             z-index: 10001;
             animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         `;
+        
+        // Close on background click
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.remove();
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }
+        });
         
         // Add content styles
         const content = popup.querySelector('.surprise-popup-content');
@@ -937,6 +1030,18 @@ document.addEventListener('DOMContentLoaded', function() {
             button.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.3)';
         });
         
+        // Close handler
+        const closePopup = () => {
+            popup.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                popup.remove();
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }, 300);
+        };
+        
+        button.addEventListener('click', closePopup);
+        
         document.body.appendChild(popup);
         
         // Add CSS animations
@@ -945,6 +1050,11 @@ document.addEventListener('DOMContentLoaded', function() {
             @keyframes fadeIn {
                 from { opacity: 0; }
                 to { opacity: 1; }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
             }
             
             @keyframes scaleIn {
@@ -1063,13 +1173,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .about-content {
-            background: #475569;
-            border-radius: 12px;
+            background: rgba(71, 85, 105, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
             padding: 2rem;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .about-content::before {
@@ -1079,8 +1194,8 @@ document.addEventListener('DOMContentLoaded', function() {
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
-            transition: transform 0.5s ease;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, transparent 70%);
+            transition: transform 0.6s ease;
             transform: scale(0);
         }
         
@@ -1089,10 +1204,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .about-content:hover {
-            border-color: #4f46e5;
-            background: #64748b;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+            border-color: rgba(79, 70, 229, 0.5);
+            background: rgba(100, 116, 139, 0.5);
+            transform: translateY(-5px) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .about-intro {
@@ -1249,13 +1365,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .experience-item {
-            background: #475569;
-            border-radius: 12px;
+            background: rgba(71, 85, 105, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
             padding: 2rem;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .experience-item::before {
@@ -1265,8 +1386,8 @@ document.addEventListener('DOMContentLoaded', function() {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.2), transparent);
+            transition: left 0.6s ease;
         }
         
         .experience-item:hover::before {
@@ -1274,10 +1395,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .experience-item:hover {
-            border-color: #4f46e5;
-            background: #64748b;
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+            border-color: rgba(79, 70, 229, 0.5);
+            background: rgba(100, 116, 139, 0.5);
+            transform: translateY(-8px) scale(1.02) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .experience-header {
@@ -1383,13 +1505,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .project-item {
-            background: #475569;
-            border-radius: 12px;
+            background: rgba(71, 85, 105, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
             padding: 2rem;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .project-item::before {
@@ -1399,8 +1526,8 @@ document.addEventListener('DOMContentLoaded', function() {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+            transition: left 0.6s ease;
         }
         
         .project-item:hover::before {
@@ -1408,10 +1535,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .project-item:hover {
-            border-color: #8b5cf6;
-            background: #64748b;
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(100, 116, 139, 0.5);
+            transform: translateY(-8px) scale(1.02) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .project-header {
@@ -1452,6 +1580,25 @@ document.addEventListener('DOMContentLoaded', function() {
             margin: 0 0 1rem 0;
         }
         
+        .project-description ul {
+            color: #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin: 1rem 0 1rem 1.5rem;
+            padding: 0;
+        }
+        
+        .project-description li {
+            color: #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-description li:last-child {
+            margin-bottom: 0;
+        }
+        
         .project-technologies {
             color: #94a3b8;
             font-size: 0.9rem;
@@ -1489,16 +1636,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .skill-category {
-            background: #475569;
-            border-radius: 12px;
+            background: rgba(71, 85, 105, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
             padding: 1.5rem;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-        
-        .skill-category {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .skill-category::before {
@@ -1508,8 +1657,8 @@ document.addEventListener('DOMContentLoaded', function() {
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-            transition: transform 0.5s ease;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            transition: transform 0.6s ease;
             transform: scale(0);
         }
         
@@ -1518,10 +1667,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .skill-category:hover {
-            border-color: #8b5cf6;
-            background: #64748b;
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(100, 116, 139, 0.5);
+            transform: translateY(-8px) scale(1.03) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .skill-category:hover .skill-tag {
@@ -1620,17 +1770,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         .certificate-item {
             background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .certificate-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .certificate-item::before {
@@ -1640,8 +1791,8 @@ document.addEventListener('DOMContentLoaded', function() {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+            transition: left 0.6s ease;
         }
         
         .certificate-item:hover::before {
@@ -1649,9 +1800,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .certificate-item:hover {
-            border-color: #8b5cf6;
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-8px) scale(1.02) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .certificate-header {
@@ -1688,17 +1840,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         .hobby-item {
             background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .hobby-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .hobby-item::before {
@@ -1708,8 +1861,8 @@ document.addEventListener('DOMContentLoaded', function() {
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-            transition: transform 0.5s ease;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            transition: transform 0.6s ease;
             transform: scale(0);
         }
         
@@ -1718,9 +1871,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .hobby-item:hover {
-            border-color: #8b5cf6;
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-8px) scale(1.02) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .hobby-item h3 {
@@ -1763,19 +1917,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         .contact-item {
             background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 1.5rem;
             display: flex;
             align-items: center;
             gap: 1.5rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .contact-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .contact-item::before {
@@ -1785,8 +1940,8 @@ document.addEventListener('DOMContentLoaded', function() {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+            transition: left 0.6s ease;
         }
         
         .contact-item:hover::before {
@@ -1794,9 +1949,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .contact-item:hover {
-            border-color: #8b5cf6;
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-8px) scale(1.02) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .contact-item:hover .contact-icon {
@@ -1861,17 +2017,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         .education-item {
             background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .education-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
         }
         
         .education-item::before {
@@ -1881,8 +2038,8 @@ document.addEventListener('DOMContentLoaded', function() {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+            transition: left 0.6s ease;
         }
         
         .education-item:hover::before {
@@ -1890,9 +2047,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         .education-item:hover {
-            border-color: #8b5cf6;
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-8px) scale(1.02) translateZ(10px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         
         .education-item h3 {
@@ -1982,21 +2140,28 @@ function initSurpriseModal() {
     const surpriseModal = document.getElementById('surpriseModal');
     const closeBtn = document.getElementById('closeSurpriseModal');
     
+    function openModal() {
+        // Prevent layout shift by maintaining scrollbar
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.paddingRight = scrollbarWidth + 'px';
+        document.body.style.overflow = 'hidden';
+        surpriseModal.classList.add('show');
+    }
+    
+    function closeModal() {
+        surpriseModal.classList.remove('show');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+    
     if (surpriseBtn && surpriseModal && closeBtn) {
-        surpriseBtn.addEventListener('click', () => {
-            surpriseModal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        });
+        surpriseBtn.addEventListener('click', openModal);
         
-        closeBtn.addEventListener('click', () => {
-            surpriseModal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-        });
+        closeBtn.addEventListener('click', closeModal);
         
         surpriseModal.addEventListener('click', (e) => {
             if (e.target === surpriseModal) {
-                surpriseModal.classList.remove('show');
-                document.body.style.overflow = 'auto';
+                closeModal();
             }
         });
     }

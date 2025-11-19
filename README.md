@@ -1,30 +1,25 @@
 # Onur Şahinler - Portfolio
 
-## 👋 Merhaba!
+## Hi, I'm Onur Şahinler
+I'm a Computer Engineering graduate from İzmir Institute of Technology (IZTECH) and an ISTQB Foundation Level–certified software testing enthusiast. I’m passionate about building high-quality software and constantly improving myself in QA and testing methodologies.
 
-Ben Onur Şahinler, İzmir Yüksek Teknoloji Enstitüsü'nden (IZTECH) Bilgisayar Mühendisliği bölümünden mezun, **ISTQB Foundation Level** sertifikalı bir yazılım test uzmanıyım.
+## What I Focus On
+- Software Testing & Quality Assurance
+- Test Automation & API Testing
+- Performance & Security Testing
+- Manual Testing & Test Planning
+I enjoy combining theory with hands-on practices to ensure reliable and user-centered software.
 
-## 🎯 Uzmanlık Alanım
 
-Yazılım test alanında uzmanlaşmış olup, özellikle:
-- **Yazılım Test Mühendisliği** ve **Kalite Güvencesi**
-- **Test Otomasyonu** ve **API Testleri**
-- **Performans Testleri** ve **Güvenlik Testleri**
-- **Manuel Test** ve **Test Planlama**
+## Highlights
+- ISTQB Foundation Level Certified
+- IZTECH Computer Engineering (Honors Student)
+- QA Engineer Intern at BeforeSunset AI
+- Visited 18 countries
+- Active lifestyle (Football & Bodybuilding)
 
-konularında deneyim sahibiyim.
-
-## 🏆 Öne Çıkan Özellikler
-
-- ✅ **ISTQB Foundation Level** sertifikalı
-- 🎓 İzmir Yüksek Teknoloji Enstitüsü Bilgisayar Mühendisliği (Onur Öğrencisi)
-- 💼 BeforeSunset AI'da QA Engineer Intern deneyimi
-- 🌍 23 ülke gezmiş, uluslararası deneyim
-- 🏃‍♂️ Aktif sporcu (Futbol, Vücut Geliştirme)
-
-## 🔗 İletişim
-
-Detaylı bilgiler, projelerim ve deneyimlerim için portfolio websitemi ziyaret edebilirsiniz:
+## 🔗 Contact
+You can visit my portfolio website for detailed information, my projects and experiences:
 
 **📧 Email:** sahinleronur9@gmail.com  
 **💼 LinkedIn:** [linkedin.com/in/onur-şahinler-b39bb9224/](https://linkedin.com/in/onur-şahinler-b39bb9224/)  
@@ -33,4 +28,4 @@ Detaylı bilgiler, projelerim ve deneyimlerim için portfolio websitemi ziyaret 
 
 ---
 
-*"Yazılım kalitesini artırmak ve kullanıcı deneyimini geliştirmek için sürekli öğrenmeye ve gelişmeye odaklanıyorum."*
+*"I’m constantly learning and improving to help build better software and meaningful user experiences."*
