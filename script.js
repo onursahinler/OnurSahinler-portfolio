@@ -1,5 +1,8 @@
 // Portfolio Navigation and Interactions
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize scroll animations
+    initScrollAnimations();
+    
     // Navigation elements
     const navItems = document.querySelectorAll('.nav-item');
     const nextBtn = document.querySelector('.next-btn');
@@ -150,12 +153,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Initialize scroll animations
+    function initScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100); // Stagger animation
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements that should animate on scroll
+        const animatedElements = document.querySelectorAll('.experience-item, .project-item, .skill-category, .certificate-item, .hobby-item, .contact-item, .education-item, .about-content');
+        animatedElements.forEach(el => {
+            if (!el.classList.contains('fade-in')) {
+                el.classList.add('fade-in');
+                observer.observe(el);
+            }
+        });
+    }
+    
     // Update section content based on current section
     function updateSectionContent(index) {
         const sectionTitle = document.querySelector('.section-title');
         const formContainer = document.querySelector('.form-container');
         
-        const sectionData = {
+        // Add fade out animation
+        if (formContainer) {
+            formContainer.style.opacity = '0';
+            formContainer.style.transform = 'translateY(20px)';
+            formContainer.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        }
+        
+        setTimeout(() => {
+            const sectionData = {
             0: {
                 title: 'ABOUT',
                 content: getAboutContent()
@@ -190,12 +228,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
         
-        const currentData = sectionData[index];
-        sectionTitle.textContent = currentData.title;
-        formContainer.innerHTML = currentData.content;
-        
-        // Re-attach event listeners for new content
-        attachEventListeners();
+            const currentData = sectionData[index];
+            sectionTitle.textContent = currentData.title;
+            formContainer.innerHTML = currentData.content;
+            
+            // Re-initialize scroll animations for new content
+            setTimeout(() => {
+                initScrollAnimations();
+            }, 100);
+            
+            // Fade in animation
+            formContainer.style.opacity = '1';
+            formContainer.style.transform = 'translateY(0)';
+            
+            // Re-attach event listeners for new content
+            attachEventListeners();
+        }, 300);
     }
     
     // Get about section content
@@ -1020,11 +1068,31 @@ document.addEventListener('DOMContentLoaded', function() {
             padding: 2rem;
             border: 2px solid transparent;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
+            transition: transform 0.5s ease;
+            transform: scale(0);
+        }
+        
+        .about-content:hover::before {
+            transform: scale(1);
         }
         
         .about-content:hover {
             border-color: #4f46e5;
             background: #64748b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
         }
         
         .about-intro {
@@ -1050,6 +1118,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .about-paragraph {
             margin-bottom: 1.2rem;
             line-height: 1.7;
+            transition: transform 0.3s ease;
+        }
+        
+        .about-content:hover .about-paragraph {
+            transform: translateX(5px);
         }
         
         .about-paragraph p {
@@ -1181,12 +1254,30 @@ document.addEventListener('DOMContentLoaded', function() {
             padding: 2rem;
             border: 2px solid transparent;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .experience-item:hover::before {
+            left: 100%;
         }
         
         .experience-item:hover {
             border-color: #4f46e5;
             background: #64748b;
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
         }
         
         .experience-header {
@@ -1297,12 +1388,30 @@ document.addEventListener('DOMContentLoaded', function() {
             padding: 2rem;
             border: 2px solid transparent;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .project-item:hover::before {
+            left: 100%;
         }
         
         .project-item:hover {
             border-color: #8b5cf6;
             background: #64748b;
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
         }
         
         .project-header {
@@ -1387,11 +1496,32 @@ document.addEventListener('DOMContentLoaded', function() {
             transition: all 0.3s ease;
         }
         
+        .skill-category {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-category::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            transition: transform 0.5s ease;
+            transform: scale(0);
+        }
+        
+        .skill-category:hover::before {
+            transform: scale(1);
+        }
+        
         .skill-category:hover {
             border-color: #8b5cf6;
             background: #64748b;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
         }
         
         .skill-category:hover .skill-tag {
@@ -1436,11 +1566,37 @@ document.addEventListener('DOMContentLoaded', function() {
             border: 1px solid transparent;
         }
         
+        .skill-tag {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-tag::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        
+        .skill-tag:hover::before {
+            width: 150px;
+            height: 150px;
+        }
+        
         .skill-tag:hover {
             background: #8b5cf6;
             color: white;
             border-color: #8b5cf6;
-            transform: translateY(-1px);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            z-index: 1;
+            position: relative;
         }
         
         
@@ -1472,10 +1628,30 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(10px);
         }
         
+        .certificate-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .certificate-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .certificate-item:hover::before {
+            left: 100%;
+        }
+        
         .certificate-item:hover {
             border-color: #8b5cf6;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
         }
         
         .certificate-header {
@@ -1520,10 +1696,31 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(10px);
         }
         
+        .hobby-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hobby-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            transition: transform 0.5s ease;
+            transform: scale(0);
+        }
+        
+        .hobby-item:hover::before {
+            transform: scale(1);
+        }
+        
         .hobby-item:hover {
             border-color: #8b5cf6;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
         }
         
         .hobby-item h3 {
@@ -1576,10 +1773,39 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(10px);
         }
         
+        .contact-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .contact-item:hover::before {
+            left: 100%;
+        }
+        
         .contact-item:hover {
             border-color: #8b5cf6;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+        }
+        
+        .contact-item:hover .contact-icon {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .contact-icon {
+            transition: transform 0.5s ease, box-shadow 0.3s ease;
         }
         
         .contact-icon {
@@ -1643,10 +1869,30 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(10px);
         }
         
+        .education-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .education-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .education-item:hover::before {
+            left: 100%;
+        }
+        
         .education-item:hover {
             border-color: #8b5cf6;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
         }
         
         .education-item h3 {
