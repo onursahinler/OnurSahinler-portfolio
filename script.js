@@ -176,23 +176,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                     const targetY = mainSectionRect.top + scrollTop - 20; // 20px padding from top
                     
-                    // Smooth scroll
+                    // Fast, smooth scroll - single continuous motion
                     const startY = window.pageYOffset;
                     const distance = targetY - startY;
-                    const duration = 600;
+                    // Faster duration - 400-600ms for smooth but quick scroll
+                    const duration = Math.min(Math.max(Math.abs(distance) * 0.4, 400), 600);
                     let start = null;
+                    
+                    // Smooth ease-out-quart for fluid motion
+                    function easeOutQuart(t) {
+                        return 1 - Math.pow(1 - t, 4);
+                    }
                     
                     function step(timestamp) {
                         if (!start) start = timestamp;
-                        const progress = timestamp - start;
-                        const ease = progress / duration;
-                        const easeInOutCubic = ease < 0.5 
-                            ? 4 * ease * ease * ease 
-                            : 1 - Math.pow(-2 * ease + 2, 3) / 2;
                         
-                        window.scrollTo(0, startY + distance * easeInOutCubic);
+                        const elapsed = timestamp - start;
+                        const progress = Math.min(elapsed / duration, 1);
                         
-                        if (progress < duration) {
+                        // Apply smooth easing
+                        const eased = easeOutQuart(progress);
+                        const currentY = startY + distance * eased;
+                        
+                        window.scrollTo(0, currentY);
+                        
+                        // Continue until complete
+                        if (progress < 1) {
                             requestAnimationFrame(step);
                         }
                     }
@@ -876,29 +885,37 @@ document.addEventListener('DOMContentLoaded', function() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const targetY = buttonRect.top + scrollTop - (window.innerHeight / 2) + (buttonRect.height / 2);
             
-            // Smooth scroll without layout shift
+            // Fast, smooth scroll - single continuous motion
             const startY = window.pageYOffset;
             const distance = targetY - startY;
-            const duration = 800;
+            // Faster duration - 500-800ms
+            const duration = Math.min(Math.max(Math.abs(distance) * 0.4, 500), 800);
             let start = null;
+            
+            // Smooth ease-out-quart for fluid motion
+            function easeOutQuart(t) {
+                return 1 - Math.pow(1 - t, 4);
+            }
             
             function step(timestamp) {
                 if (!start) start = timestamp;
-                const progress = timestamp - start;
-                const ease = progress / duration;
-                const easeInOutCubic = ease < 0.5 
-                    ? 4 * ease * ease * ease 
-                    : 1 - Math.pow(-2 * ease + 2, 3) / 2;
                 
-                window.scrollTo(0, startY + distance * easeInOutCubic);
+                const elapsed = timestamp - start;
+                const progress = Math.min(elapsed / duration, 1);
                 
-                if (progress < duration) {
+                // Apply smooth easing
+                const eased = easeOutQuart(progress);
+                const currentY = startY + distance * eased;
+                
+                window.scrollTo(0, currentY);
+                
+                if (progress < 1) {
                     requestAnimationFrame(step);
                 } else {
                     // Show popup after scroll completes
                     setTimeout(() => {
                         showSurprisePopup();
-                    }, 300);
+                    }, 200);
                 }
             }
             
