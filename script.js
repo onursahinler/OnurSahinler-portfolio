@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ctaButton.disabled = true;
         
         // Open CV in new tab
-        const cvWindow = window.open('Onur_Sahinler_CompEngineer_CV.pdf', '_blank');
+        const cvWindow = window.open('Onur_Sahinler-CV-CompEng.pdf', '_blank');
         
         // Reset button after opening
         setTimeout(() => {
