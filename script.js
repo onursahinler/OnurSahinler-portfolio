@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="experience-item">
                         <div class="experience-header">
                             <h3>Full Stack Developer (Erasmus+ Traineeship)</h3>
-                            <span class="experience-duration">September 2025 - Present · ${currentJobMonths} months</span>
+                            <span class="experience-duration">September 2025 - March 2026 · 6 months</span>
                         </div>
                         <div class="experience-org">
                             <strong><a href="https://www.maastrichtuniversity.nl/research/institute-data-science" target="_blank" rel="noopener noreferrer">Maastricht University Institute of Data Science</a></strong> · Intern
@@ -359,18 +359,18 @@ document.addEventListener('DOMContentLoaded', function() {
                             <i class="fas fa-map-marker-alt"></i> Maastricht, Limburg, Netherlands · Office-based Work
                         </div>
                         <div class="experience-description">
-                            <p>Working under the guidance of Asst. Prof. Chang Sun to predict cardiovascular disease risks in leukemia patients.</p>
+                            <p>I worked under the guidance of Asst. Prof. Chang Sun, I developed UM_CVD, an explainable AI-driven clinical decision support system designed to predict cardiovascular disease risks in leukemia patients undergoing TKI therapy.</p>
                             <div class="experience-achievements">
                                 <h4>Key Contributions:</h4>
                                 <ul>
-                                    <li>Built a responsive Next.js + TypeScript + Tailwind CSS web app with a clinician-friendly interface</li>
-                                    <li>Developed an AI-powered cardiovascular risk assessment tool for CML patients </li>
-                                    <li>Designed a secure doctor authentication system and intuitive multi-step patient workflow</li>
-                                    <li>Integrated Explainable AI with clinical guidelines through LLMs</li>
-                                    <li>Created a multi-agent system for early cardiovascular risk detection</li>
-                                    <li>Performed software testing to ensure reliability, performance, and cross-platform compatibility</li>
+                                    <li>Built a responsive, clinician-friendly web application using Next.js, TypeScript, and Tailwind CSS, featuring an intuitive multi-step patient data entry workflow</li>
+                                    <li>Developed an AI-powered cardiovascular risk assessment pipeline combining a Random Forest model with SHAP-based explainability for transparent risk scoring</li>
+                                    <li>Designed a secure doctor authentication system to ensure safe and controlled access to patient data and clinical insights</li>
+                                    <li>Architected a multi-agent orchestration framework — comprising prediction, explanation, knowledge, and intervention agents — for early and transparent cardiovascular risk detection</li>
+                                    <li>Integrated retrieval-augmented generation (RAG) on clinical guidelines and PubMed literature via a ChromaDB vector store, grounding recommendations in up-to-date medical evidence</li>
+                                    <li>Conducted thorough software testing to ensure reliability, performance, and cross-platform compatibility</li>
                                 </ul>
-                                <p><strong>Project Goal:</strong> Bridges AI and healthcare, empowering clinicians with a transparent and reliable tool for early cardiovascular risk detection.</p>
+                                <p><strong>Project Goal:</strong>Bridges AI and healthcare, empowering clinicians with a transparent and evidence-based tool for early cardiovascular risk detection and management.</p>
                             </div>
                         </div>
                         <div class="experience-skills">
@@ -467,21 +467,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="projects-content">
                     
                     <!-- Project 1: Clinical Decision Support Tool -->
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/onursahinler/UM_CVD', '_blank')">
                         <div class="project-header">
                             <h3>AI-Powered Clinical Decision Support Tool for Cardiovascular Risk Assessment</h3>
-                            <span class="project-duration">September 2025 - Present</span>
+                            <span class="project-duration">September 2025 - March 2026</span>
                         </div>
                         <div class="project-description">
-                            <p>I am working as a Full Stack Developer under the guidance of Asst. Prof. Chang Sun to predict cardiovascular disease risks in leukemia patients. In this project, I am building an advanced clinical decision support system that combines machine learning predictions with large language model–powered explanations and interventions, creating a transparent and actionable tool for clinicians.</p>
-                            <p>My work bridges AI and healthcare by empowering clinicians with a comprehensive multi-agent system for early cardiovascular risk detection. The system uses a Random Forest model with SHAP (SHapley Additive exPlanations) for interpretable predictions, enhanced by a sophisticated multi-agent architecture that includes:</p>
+                            <p>I worked as a Full Stack Developer under the guidance of Asst. Prof. Chang Sun to predict cardiovascular disease risks in leukemia patients. In this project, I built an advanced clinical decision support system that combines machine learning predictions with large language model–powered explanations and interventions, creating a transparent and actionable tool for clinicians.</p>
+                            <p>My work bridged AI and healthcare by empowering clinicians with a comprehensive multi-agent system for early cardiovascular risk detection. The system I built used a Random Forest model with SHAP (SHapley Additive exPlanations) for interpretable predictions, enhanced by a sophisticated multi-agent architecture that I designed and implemented, which included:</p>
                             <ul>
                                 <li>a Prediction Agent for risk scoring,</li>
                                 <li>an Explanation Agent that converts SHAP values into natural language explanations using LLMs,</li>
                                 <li>an Intervention Agent that provides evidence-based treatment recommendations, and</li>
                                 <li>a Knowledge Agent that answers clinical questions about features, CML, and CVD.</li>
                             </ul>
-                            <p>The platform also includes a modern Next.js web interface with interactive SHAP visualizations, real-time what-if scenario analysis, and an AI-powered chatbot that intelligently routes queries to specialized agents. By integrating explainable AI with clinical guidelines through LLMs, I aim to significantly enhance the system's explainability, transparency, and practical utility for supporting patient care decisions.</p>
+                            <p>The platform I delivered also included a modern Next.js web interface with interactive SHAP visualizations, real-time what-if scenario analysis, and an AI-powered chatbot that I designed to intelligently route queries to specialized agents. By integrating explainable AI with clinical guidelines through LLMs, I significantly enhanced the system's explainability, transparency, and practical utility for supporting patient care decisions.</p>
                         </div>
                         <div class="project-technologies">
                             <i class="fas fa-gem"></i> Next.js, TypeScript, Tailwind CSS, Machine Learning, Random Forest, SHAP, Large Language Models (LLMs), Multi-Agent Systems, AI Integration
@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
                     <!-- Project 2: Charge Mate -->
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/onursahinler/charge_mate', '_blank')">
                         <div class="project-header">
                             <h3>Real-Time Electric Vehicles (EV) Charging Station Locator and Reservation System</h3>
                             <span class="project-duration">October 2024 - June 2025</span>
@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
                     <!-- Project 3: AGO BinVert -->
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/onursahinler/ago_bin_vert2', '_blank')">
                         <div class="project-header">
                             <h3>AGO BinVert</h3>
                             <span class="project-duration">February 2025 - June 2025</span>
@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
 
                     <!-- Project 4: Online Internship Management System -->
-                    <div class="project-item">
+                    <div class="project-item" onclick="window.open('https://github.com/emrecancuhadar/oims_project', '_blank')">
                         <div class="project-header">
                             <h3>Online Internship Management System</h3>
                             <span class="project-duration">October 2023 - June 2024</span>
@@ -764,7 +764,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <div class="hobby-item">
                     <h3>Traveling</h3>
-                    <p>Traveling abroad to see different cultures and meet different people is truly enjoyable. Despite my young age, I've visited 18 countries outside of Turkey, and I want to see as many places as possible in my lifetime.</p>
+                    <p>Traveling abroad to see different cultures and meet different people is truly enjoyable. Despite my young age, I've visited 13 countries outside of Turkey, and I want to see as many places as possible in my lifetime.</p>
                 </div>
                 
                 <div class="hobby-item">
