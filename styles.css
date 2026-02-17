@@ -1391,6 +1391,11 @@ body {
     flex: 1;
 }
 
+/* Project cards clickable styles */
+.project-item {
+    cursor: pointer;
+}
+
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 8px;

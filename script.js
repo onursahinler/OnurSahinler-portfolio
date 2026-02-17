@@ -670,7 +670,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="education-content">
                 <div class="education-item">
                     <h3>İzmir Institute of Technology (IZTECH)</h3>
-                    <div class="education-duration">2020 - 2025</div>
+                    <div class="education-duration">2021 - 2025</div>
                     <div class="education-degree">Bachelor’s degree in Computer Engineering</div>
                     <div class="education-details">
                         <p><strong>Honors Student</strong> - Graduated with distinction</p>
